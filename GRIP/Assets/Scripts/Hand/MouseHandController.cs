@@ -10,6 +10,11 @@ public class MouseHandController : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float followSpeed = 15f;
 
+    [Header("Rotation")]
+    [SerializeField] private Transform handPivot;
+    [SerializeField] private float rotationSpeed = 0.15f;
+    [SerializeField] private float maxPitch = 70f;
+
     [Header("Height")]
     [SerializeField] private float height = 0.35f;
     [SerializeField] private float scrollSensitivity = 0.0015f;
@@ -18,12 +23,25 @@ public class MouseHandController : MonoBehaviour
 
     private Vector3 targetPosition;
 
+    private float yaw;
+    private float pitch;
+    private bool wasRotating = false;
+    private Vector2 mousePositionBeforeRotation;
+
     private void Awake()
     {
         if (cam == null)
             cam = Camera.main;
 
         targetPosition = transform.position;
+
+        if (handPivot != null)
+        {
+            Vector3 rot = handPivot.localEulerAngles;
+
+            pitch = rot.x;
+            yaw = rot.y;
+        }
 
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = false;
@@ -32,8 +50,30 @@ public class MouseHandController : MonoBehaviour
     private void Update()
     {
         UpdateHeight();
-        UpdateTarget();
-        MoveHand();
+
+        bool isRotating = Mouse.current.middleButton.isPressed;
+
+        if (isRotating)
+        {
+            if (!wasRotating)
+            {
+                StartRotation();
+            }
+
+            RotateHand();
+        }
+        else
+        {
+            if (wasRotating)
+            {
+                EndRotation();
+            }
+
+            UpdateTarget();
+            MoveHand();
+        }
+
+        wasRotating = isRotating;
     }
 
     private void UpdateHeight()
@@ -67,7 +107,38 @@ public class MouseHandController : MonoBehaviour
             targetPosition.y = height;
         }
     }
+    private void StartRotation()
+    {
+        mousePositionBeforeRotation = Mouse.current.position.ReadValue();
 
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    private void EndRotation()
+    {
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = false;
+
+        Mouse.current.WarpCursorPosition(mousePositionBeforeRotation);
+    }
+    private void RotateHand()
+    {
+        if (Mouse.current == null)
+            return;
+
+        Vector2 delta = Mouse.current.delta.ReadValue();
+
+        // Rotate around WORLD Y
+        handPivot.Rotate(Vector3.up,
+            delta.x * rotationSpeed,
+            Space.World);
+
+        // Rotate around LOCAL X (or Z if that's your preferred wrist tilt)
+        handPivot.Rotate(Vector3.forward,
+            -delta.y * rotationSpeed,
+            Space.Self);
+    }
     private void MoveHand()
     {
         transform.position = Vector3.Lerp(

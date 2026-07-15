@@ -21,6 +21,9 @@ public class FingerController : MonoBehaviour
     [SerializeField] private float curlSpeed = 8f;
 
     public float CurlAmount { get; private set; }
+    public bool IsCurled => CurlAmount > 0.8f;
+
+    public bool IsExtended => CurlAmount < 0.2f;
 
     Quaternion baseStart;
     Quaternion middleStart;
