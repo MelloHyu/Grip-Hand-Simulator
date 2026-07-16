@@ -73,16 +73,24 @@ public class HoldController : MonoBehaviour
 
     void HoldObject()
     {
+        Vector3 offset =
+                heldObject.GripPoint.position -
+                heldObject.transform.position;
+
         heldObject.transform.position =
-            Vector3.Lerp(
+            Vector3.MoveTowards(
                 heldObject.transform.position,
-                grabPoint.position,
+                grabPoint.position - offset,
                 followSpeed * Time.deltaTime);
+
+        Quaternion rotationOffset =
+            Quaternion.Inverse(heldObject.GripPoint.rotation) *
+            heldObject.transform.rotation;
 
         heldObject.transform.rotation =
             Quaternion.Slerp(
                 heldObject.transform.rotation,
-                grabPoint.rotation,
+                grabPoint.rotation * rotationOffset,
                 rotateSpeed * Time.deltaTime);
     }
 

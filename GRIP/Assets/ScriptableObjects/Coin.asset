@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a320100adfa8e1e4f8a32369b1456f00, type: 3}
+  m_Name: Coin
+  m_EditorClassIdentifier: Assembly-CSharp::GripProfile
+  requiredGrip: 1
+  fingerRequirements:
+  - finger: 0
+    contribution: 50
+  - finger: 1
+    contribution: 50
+  stabilityRequired: 100
+  grabDistance: 0.04
+  holdForce: 1500
+  breakForce: 100
+  followForce: 250
+  damping: 18
+  rotationForce: 30
+  maxVelocity: 5

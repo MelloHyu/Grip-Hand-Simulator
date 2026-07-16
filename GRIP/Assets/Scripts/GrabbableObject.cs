@@ -19,6 +19,10 @@ public class GrabbableObject : MonoBehaviour
 
     public IReadOnlyCollection<FingerType> TouchingFingers => touchingFingers;
 
+    [SerializeField] private Transform gripPoint;
+
+    public Transform GripPoint => gripPoint;
+
     private void Awake()
     {
         Rigidbody = GetComponent<Rigidbody>();
