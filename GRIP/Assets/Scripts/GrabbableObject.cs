@@ -1,6 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ObjectType
+{
+    Apple,
+    Coin,
+    Key,
+    Mug
+}
+
 [RequireComponent(typeof(Rigidbody))]
 public class GrabbableObject : MonoBehaviour
 {
@@ -22,6 +30,12 @@ public class GrabbableObject : MonoBehaviour
     [SerializeField] private Transform gripPoint;
 
     public Transform GripPoint => gripPoint;
+
+    [Header("Object")]
+
+    [SerializeField] private ObjectType objectType;
+
+    public ObjectType ObjectType => objectType;
 
     private void Awake()
     {
